@@ -74,7 +74,9 @@ const PHOTOS = {
   'govee rgbic led strip':
     'https://cdn.shopify.com/s/files/1/0512/3489/8105/files/617F.png?v=1770881059',
   'ring alarm 5-piece':
-    'https://images.ctfassets.net/a3peezndovsu/variant-28444503670873/2b3b11b7d7aea840c89faed9f067eec4/variant-28444503670873.jpg'
+    'https://images.ctfassets.net/a3peezndovsu/variant-28444503670873/2b3b11b7d7aea840c89faed9f067eec4/variant-28444503670873.jpg',
+  'simplisafe essentials':
+    'https://images.ctfassets.net/v6awd0kabi65/2vbLh5TJjOjOMjR1VAKCyR/b20d8f8f911774d6c63c439ee572f8fe/Hero_tablet__1_.png'
 };
 
 const photoFor = (alt) => PHOTOS[String(alt || '').trim().toLowerCase()] || null;
@@ -259,7 +261,7 @@ const DISCLOSURE =
   '    </div>';
 
 function shell(opts) {
-  const { title, description, canonical, keywords, body, jsonld, ogType, ogImage } = opts;
+  const { title, description, canonical, keywords, body, jsonld, ogType, ogImage, verify } = opts;
   const page = '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="UTF-8">\n' +
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
@@ -267,6 +269,7 @@ function shell(opts) {
     '<meta name="description" content="' + esc(description) + '">\n' +
     (keywords ? '<meta name="keywords" content="' + esc(keywords) + '">\n' : '') +
     '<link rel="canonical" href="' + cleanUrl(canonical) + '">\n' +
+    (verify ? '<meta name="google-site-verification" content="' + verify + '">\n' : '') +
     '<meta name="theme-color" content="#ffffff">\n' +
     '<meta property="og:site_name" content="Smart Home for Renters">\n' +
     '<meta property="og:title" content="' + esc(title) + '">\n' +
@@ -530,6 +533,7 @@ function homePage(reviews, kits) {
     canonical: cleanUrl(SITE + '/'),
     keywords: 'smart home for renters, no drill smart home, apartment smart home, renter friendly smart devices',
     body,
+    verify: 'VvgbU90BUEynrhjgHe5UKCUOEhDsMTn8fTobAk8x8vk',
     jsonld: {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
