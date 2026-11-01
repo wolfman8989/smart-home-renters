@@ -371,3 +371,9 @@ footer { flex: 0 0 auto; margin-top: auto; background: var(--bg-alt); border-top
   body { font-size: 11pt; }
   main { max-width: none; padding: 0; }
 }
+
+/* related reading */
+.related-reading { margin: 28px 0 20px; padding: 16px 18px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: var(--radius); }
+.related-reading h3 { margin: 0 0 8px; font-size: 15px; }
+.related-reading ul { margin: 0; padding-left: 20px; }
+.related-reading li { margin: 4px 0; font-size: 14px; }

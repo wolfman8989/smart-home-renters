@@ -119,6 +119,29 @@ function frontMatter(raw) {
 const words = (s) => s.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
 const minutes = (s) => Math.max(1, Math.round(words(s) / 220));
 
+// Pull Q&A pairs out of a "Frequently Asked Questions" section so we can emit
+// FAQPage structured data (rich results in Google).
+function extractFaq(md) {
+  const m = md.match(/##[^\n]*Frequent[^\n]*\n([\s\S]*?)(?=\n##|\n---\s*\n|$)/i);
+  if (!m) return [];
+  const section = m[1];
+  const out = [];
+  const re = /\*\*([^*]+\?)\*\*\s*\n([\s\S]*?)(?=\*\*[^*]+\?\*\*|\n##|\n---\s*\n|$)/g;
+  let mm;
+  while ((mm = re.exec(section))) {
+    const q = mm[1].trim();
+    const a = mm[2].trim().replace(/\s+/g, ' ');
+    if (q && a) out.push({ q, a });
+  }
+  return out;
+}
+
+// First product photo in an article's rendered HTML, for Article.image.
+function firstPhoto(html) {
+  const m = html.match(/class="product-img"><img src="([^"]+)"/);
+  return m ? m[1] : null;
+}
+
 // ------------------------------------------------------- markdown render ---
 function renderMarkdown(md) {
   // The H1 lives in the shell, not in the body.
@@ -236,7 +259,7 @@ const DISCLOSURE =
   '    </div>';
 
 function shell(opts) {
-  const { title, description, canonical, keywords, body, jsonld, ogType } = opts;
+  const { title, description, canonical, keywords, body, jsonld, ogType, ogImage } = opts;
   const page = '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="UTF-8">\n' +
     '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
@@ -250,9 +273,11 @@ function shell(opts) {
     '<meta property="og:description" content="' + esc(description) + '">\n' +
     '<meta property="og:type" content="' + (ogType || 'website') + '">\n' +
     '<meta property="og:url" content="' + cleanUrl(canonical) + '">\n' +
+    (ogImage ? '<meta property="og:image" content="' + ogImage + '">\n' : '') +
     '<meta name="twitter:card" content="summary_large_image">\n' +
     '<link rel="stylesheet" href="/css/style.css">\n' +
-    (jsonld ? '<script type="application/ld+json">' + JSON.stringify(jsonld) + '</script>\n' : '') +
+    (jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]).map((j) =>
+      '<script type="application/ld+json">' + JSON.stringify(j) + '</script>').join('\n') + '\n' : '') +
     '</head>\n<body>\n' +
     header() + '\n' + body + '\n' + footer() + '\n' +
     '</body>\n</html>\n';
@@ -315,7 +340,7 @@ function hubPage({ title, description, heading, intro, items, path: p }) {
   return shell({
     title,
     description,
-    canonical: SITE + p,
+    canonical: cleanUrl(SITE + p),
     keywords: '',
     body,
     jsonld: {
@@ -328,8 +353,19 @@ function hubPage({ title, description, heading, intro, items, path: p }) {
   });
 }
 
-function articlePage(a) {
-  const canonical = SITE + '/articles/' + a.slug + '.html';
+function articlePage(a, all) {
+  all = all || [];
+  const canonical = cleanUrl(SITE + '/articles/' + a.slug + '.html');
+  const related = all
+    .filter((x) => x.slug !== a.slug)
+    .sort((x, y) => (x.category === a.category ? -1 : 1) - (y.category === a.category ? -1 : 1))
+    .slice(0, 3);
+  const relatedHtml = related.length
+    ? '<div class="related-reading"><h3>Related reading</h3><ul>' +
+      related.map((r) => '<li><a href="/articles/' + r.slug + '.html">' + esc(r.title) + '</a></li>').join('') +
+      '</ul></div>'
+    : '';
+
   const body =
     '<main class="article">\n  ' + TRUST_BAR + '\n' +
     '  <nav class="crumbs"><a href="/">Home</a> › <a href="' + HUB_PATH[a.category] + '">' +
@@ -340,8 +376,44 @@ function articlePage(a) {
     ' min read · Affiliate links included</div>\n' +
     AUTHOR_BIO + '\n' + HOW_WE_TEST + '\n' +
     a.html + '\n' +
+    relatedHtml + '\n' +
     DISCLOSURE + '\n' +
     '  </article>\n</main>';
+
+  const faqs = extractFaq(a.body);
+  const photo = firstPhoto(a.html);
+  const jsonld = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: a.title,
+      description: a.description,
+      image: photo ? [photo] : undefined,
+      author: { '@type': 'Organization', name: 'Smart Home for Renters' },
+      publisher: { '@type': 'Organization', name: 'Smart Home for Renters' },
+      datePublished: LAUNCHED,
+      dateModified: a.updated,
+      mainEntityOfPage: canonical
+    },
+    ...(faqs.length ? [{
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a }
+      }))
+    }] : []),
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: cleanUrl(SITE + '/') },
+        { '@type': 'ListItem', position: 2, name: HUB_LABEL[a.category], item: cleanUrl(SITE + HUB_PATH[a.category]) },
+        { '@type': 'ListItem', position: 3, name: a.title, item: canonical }
+      ]
+    }
+  ];
 
   return shell({
     title: a.title,
@@ -350,17 +422,8 @@ function articlePage(a) {
     keywords: a.keywords,
     ogType: 'article',
     body,
-    jsonld: {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: a.title,
-      description: a.description,
-      author: { '@type': 'Organization', name: 'Smart Home for Renters' },
-      publisher: { '@type': 'Organization', name: 'Smart Home for Renters' },
-      datePublished: LAUNCHED,
-      dateModified: a.updated,
-      mainEntityOfPage: canonical
-    }
+    ogImage: photo || undefined,
+    jsonld
   });
 }
 
@@ -464,7 +527,7 @@ function homePage(reviews, kits) {
     description:
       'The best smart home devices for renters. No drilling, no wiring, no landlord permission needed. ' +
       'Reviews, comparisons and setup guides for apartment-friendly smart home tech.',
-    canonical: SITE + '/',
+    canonical: cleanUrl(SITE + '/'),
     keywords: 'smart home for renters, no drill smart home, apartment smart home, renter friendly smart devices',
     body,
     jsonld: {
@@ -703,7 +766,7 @@ function build() {
 
   // 1. Article pages
   for (const a of articles) {
-    write(path.join(ROOT, 'articles', a.slug + '.html'), articlePage(a));
+    write(path.join(ROOT, 'articles', a.slug + '.html'), articlePage(a, articles));
   }
 
   // 2. Hub pages
@@ -756,7 +819,7 @@ function build() {
     write(path.join(ROOT, p.file), shell({
       title: p.title,
       description: p.description,
-      canonical: SITE + '/' + p.file,
+      canonical: cleanUrl(SITE + '/' + p.file),
       keywords: '',
       body:
         '<main>\\n  <div class="article">\\n' +
@@ -777,7 +840,7 @@ function build() {
   write(path.join(ROOT, '404.html'), shell({
     title: 'Page not found — Smart Home for Renters',
     description: 'That page does not exist. Start from the reviews index instead.',
-    canonical: SITE + '/404.html',
+    canonical: cleanUrl(SITE + '/404.html'),
     body:
       '<main>\n  <section class="page-head">\n' +
       '    <h1>That page does not exist</h1>\n' +
