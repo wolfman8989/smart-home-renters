@@ -1,0 +1,26 @@
+name: Build and deploy smarthomerent.casa
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # weekly rebuild so "Updated" dates and links stay fresh
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install --no-save marked
+      - run: node build.js
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=smarthomerent --commit-dirty=true
