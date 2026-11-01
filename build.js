@@ -158,16 +158,26 @@ function renderMarkdown(md) {
 
   // Product photos: swap ![Name](#photo) for a real photo when we have one,
   // otherwise drop the image entirely (an unrelated stock photo is worse).
+  // Wrap the photo in the affiliate link so clicking the picture buys.
   html = html.replace(/<p>\s*<img[^>]*alt="([^"]*)"[^>]*>\s*<\/p>/g, (whole, alt) => {
     const src = photoFor(alt);
     if (!src) return '';
+    const amazonUrl = 'https://www.amazon.com/s?k=' + encodeURIComponent(alt) + '&tag=smarthomerent-20';
     return (
-      '<div class="product-img"><img src="' + src + '" alt="' + esc(alt) +
-      '" loading="lazy" referrerpolicy="no-referrer"></div>'
+      '<div class="product-img"><a href="' + amazonUrl + '" class="affiliate" target="_blank" rel="sponsored noopener">' +
+      '<img src="' + src + '" alt="' + esc(alt) +
+      '" loading="lazy" referrerpolicy="no-referrer"></a></div>'
     );
   });
 
-  // Any other images: lazy-load, and drop picsum ones.
+  // Product names in headings become clickable (link to the Amazon search).
+  // Only headings of the form "Product Name — descriptor" are touched.
+  // (Content uses em-dash; accept hyphen/en-dash too.)
+  html = html.replace(/<(h[23])>([^<]+?)\s+[\u2014\u2013-]\s+([^<]+)<\/\1>/g, (whole, tag, name, desc) => {
+    const url = 'https://www.amazon.com/s?k=' + encodeURIComponent(name.trim()) + '&tag=smarthomerent-20';
+    return '<' + tag + '><a class="product-name" href="' + url + '" target="_blank" rel="sponsored noopener">' +
+      name.trim() + '</a> <span class="product-name-sep">\u2014</span> ' + desc.trim() + '</' + tag + '>';
+  });
   html = html.replace(/<img([^>]*)>/g, (whole, attrs) => {
     if (/picsum\.photos/.test(attrs)) return '';
     if (!/loading=/.test(attrs)) attrs += ' loading="lazy"';
