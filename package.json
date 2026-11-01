@@ -1,0 +1,1 @@
+﻿{"name":"smarthomerent-site","private":true,"version":"1.0.0","scripts":{"build":"node build.js"},"devDependencies":{"marked":"^15.0.0"}}
