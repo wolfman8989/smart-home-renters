@@ -70,6 +70,12 @@ const PHOTOS = {
     'https://images.prismic.io/kasasmart/d2863c52-5580-4322-9b6e-e7b8f32253f3_EP25P4-PRODUCT.jpg?auto=compress,format',
   'wyze plug':
     'https://www.wyze.com/cdn/shop/files/wyze-plug-wyze-labs-inc-2841977.webp?v=1770969250',
+  'eve energy':
+    'https://www.evehome.com/sites/default/files/social_media/sm-eve-energy-family.png',
+  'ikea fyrtur':
+    'https://www.ikea.com/ext/ingkadam/m/10c97f8b0838e4e6/original/PH207699-crop001.jpg',
+  'aqara roller shade driver e1':
+    'https://www.aqara.com/wp-content/uploads/2023/05/1222.524.png',
   // Aliases: the same product written the way a heading or a list entry names it.
   'govee rgbic led strip':
     'https://cdn.shopify.com/s/files/1/0512/3489/8105/files/617F.png?v=1770881059',
@@ -79,7 +85,15 @@ const PHOTOS = {
     'https://images.ctfassets.net/v6awd0kabi65/2vbLh5TJjOjOMjR1VAKCyR/b20d8f8f911774d6c63c439ee572f8fe/Hero_tablet__1_.png'
 };
 
-const photoFor = (alt) => PHOTOS[String(alt || '').trim().toLowerCase()] || null;
+const photoFor = (alt) => {
+  const raw = String(alt || '').trim().toLowerCase();
+  const norm = raw.replace(/-/g, '').replace(/\s+/g, ' ');
+  for (const k of Object.keys(PHOTOS)) {
+    const nk = k.replace(/-/g, '').replace(/\s+/g, ' ');
+    if (nk === norm) return PHOTOS[k];
+  }
+  return null;
+};
 
 // Cache-busting version for the stylesheet, derived from its contents so the
 // URL changes whenever the CSS changes (Cloudflare caches /css/* for 7 days).
