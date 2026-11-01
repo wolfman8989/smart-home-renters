@@ -1,6 +1,6 @@
 ---
 title: "How to Ask Your Landlord About Smart Home Devices (With Exact Wording)"
-description: "What to say, what to put in writing, and what your lease actually allows. Scripts for asking about smart locks, doorbells, cameras and thermostats — plus the devices that need no permission at all."
+description: "What to say, what to put in writing, and what your lease allows. Scripts for smart locks, doorbells and cameras - plus devices needing no permission."
 keywords: "ask landlord smart home, landlord permission smart lock, lease smart home devices, rental smart doorbell permission, tenant smart home rules"
 category: guide
 order: 1

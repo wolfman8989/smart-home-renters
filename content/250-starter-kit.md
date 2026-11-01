@@ -1,6 +1,6 @@
 ---
 title: "$250 Smart Home Starter Kit for Renters: The Complete No-Drill Setup"
-description: "A complete renter-friendly smart home for $250. Exactly what to buy, in what order, and what each device gets you — no drilling, no wiring, no landlord permission."
+description: "A complete renter-friendly smart home for $250. What to buy, in what order, and what each device gets you - no drilling, no wiring, no landlord permission."
 keywords: "smart home starter kit renters, $250 smart home, apartment smart home setup, no drill smart home bundle"
 category: kit
 order: 2

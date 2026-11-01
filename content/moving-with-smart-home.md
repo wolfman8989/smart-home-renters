@@ -1,6 +1,6 @@
 ---
 title: "Moving With a Smart Home: The Complete Pack-Out and Reinstall Checklist"
-description: "How to take every smart home device with you when you move — what to unplug, what to reset, what to leave behind, and how to reinstall it all in the new place in one afternoon."
+description: "How to take every smart home device with you when you move - what to unplug, reset, leave behind, and reinstall in one afternoon."
 keywords: "moving with smart home devices, pack smart home, reinstall smart home new apartment, smart home move checklist, reset smart devices move"
 category: guide
 order: 2

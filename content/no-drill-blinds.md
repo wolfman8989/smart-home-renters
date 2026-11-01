@@ -1,6 +1,6 @@
 ---
 title: "No-Drill Smart Blinds for Renters: Motorize Your Existing Curtains 2026"
-description: "The best no-drill smart blinds for renters. SwitchBot Curtain 3, Aqara and Soma clip onto the rod you already have — no new blinds, no drilling, no landlord permission."
+description: "The best no-drill smart blinds for renters. SwitchBot Curtain 3, Aqara and Soma clip onto your existing rod - no drilling, no landlord permission."
 keywords: "no drill smart blinds, smart curtains for renters, motorized blinds apartment, switchbot curtain 3 review, renter friendly smart blinds"
 category: review
 order: 6

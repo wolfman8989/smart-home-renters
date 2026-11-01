@@ -1,6 +1,6 @@
 ---
 title: "$500 Smart Home Starter Kit for Renters: The Full Apartment Setup"
-description: "The complete renter smart home for $500. Smart lock, video doorbell, lighting, cameras, climate and a real security system — all no-drill, all lease-safe, all portable."
+description: "The complete renter smart home for $500. Smart lock, doorbell, lighting, cameras, climate and security - all no-drill, lease-safe and portable."
 keywords: "smart home starter kit renters, $500 smart home, full apartment smart home, no drill smart home bundle, renter smart home setup"
 category: kit
 order: 3

@@ -1,6 +1,6 @@
 ---
 title: "Renter-Friendly Security Systems 2026: No-Drill, No-Contract Picks"
-description: "The best security systems for renters. SimpliSafe, Ring Alarm and Abode compared on lease safety — peel-and-stick sensors, no drilling, no long contract, and everything comes with you when you move."
+description: "Best security systems for renters: SimpliSafe, Ring Alarm and Abode compared on lease safety, peel-and-stick sensors, no drilling, no long contract."
 keywords: "renter friendly security system, apartment security system no drill, simplisafe renters, ring alarm apartment, no contract home security"
 category: review
 order: 8

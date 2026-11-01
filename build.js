@@ -256,7 +256,7 @@ const AUTHOR_BIO =
 
 const HOW_WE_TEST =
   '<div class="testing-method">\n' +
-  '      <h3>How We Test</h3>\n' +
+  '      <h2>How We Test</h2>\n' +
   '      <p>Every device is installed in a real apartment with no drilling allowed. We live with it for at least two weeks, ' +
   'then remove it and check the wall. We score install ease, removability, portability and whether a landlord would object — ' +
   'then we publish the score, good or bad.</p>\n' +

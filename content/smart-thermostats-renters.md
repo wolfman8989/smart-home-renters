@@ -1,6 +1,6 @@
 ---
 title: "Smart Thermostats for Renters 2026: Which Ones You Can Actually Install"
-description: "Can you install a smart thermostat in a rental? Sometimes. Nest, Ecobee and SwitchBot compared on wiring, landlord risk, and the no-wiring options that actually work."
+description: "Can you install a smart thermostat in a rental? Sometimes. Nest, Ecobee and SwitchBot compared on wiring, landlord risk, and no-wiring options."
 keywords: "smart thermostat renters, apartment thermostat no wiring, nest thermostat rental, ecobee renters, renter friendly thermostat"
 category: review
 order: 9

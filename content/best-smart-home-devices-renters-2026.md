@@ -1,6 +1,6 @@
 ---
 title: "Best Smart Home Devices for Renters 2026: No-Drill, Lease-Safe Picks"
-description: "The best smart home devices for renters in 2026. No drilling, no wiring, no landlord permission needed. Smart locks, cameras, lighting, and more — all renter-friendly."
+description: "The best smart home devices for renters in 2026. No drilling, no wiring, no landlord permission. Smart locks, cameras, lighting and more - all renter-friendly."
 keywords: "best smart home devices for renters 2026, renter friendly smart home, no drill smart home apartment"
 category: review
 order: 1
