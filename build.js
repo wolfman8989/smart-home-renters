@@ -81,6 +81,12 @@ const PHOTOS = {
 
 const photoFor = (alt) => PHOTOS[String(alt || '').trim().toLowerCase()] || null;
 
+// Cache-busting version for the stylesheet, derived from its contents so the
+// URL changes whenever the CSS changes (Cloudflare caches /css/* for 7 days).
+const crypto = require('crypto');
+const CSS_PATH = path.join(ROOT, 'css', 'style.css');
+const cssVersion = crypto.createHash('md5').update(fs.readFileSync(CSS_PATH)).digest('hex').slice(0, 8);
+
 // Cloudflare Pages strips the .html extension with a 308, so the served URL for
 // articles/foo.html is /articles/foo. Emit that form everywhere (links, canonical,
 // sitemap) and no page ever pays for a redirect hop.
@@ -288,7 +294,7 @@ function shell(opts) {
     '<meta property="og:url" content="' + cleanUrl(canonical) + '">\n' +
     (ogImage ? '<meta property="og:image" content="' + ogImage + '">\n' : '') +
     '<meta name="twitter:card" content="summary_large_image">\n' +
-    '<link rel="stylesheet" href="/css/style.css">\n' +
+    '<link rel="stylesheet" href="/css/style.css' + (cssVersion ? '?v=' + cssVersion : '') + '">\n' +
     (jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]).map((j) =>
       '<script type="application/ld+json">' + JSON.stringify(j) + '</script>').join('\n') + '\n' : '') +
     '</head>\n<body>\n' +
