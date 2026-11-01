@@ -206,8 +206,22 @@ function renderMarkdown(md) {
 
   // Affiliate links: mark them sponsored, open in a new tab.
   // (Skip links we already styled, e.g. the product photo link.)
+  // Also split the inline "Affiliate: [Check price...]" into its own line
+  // so the button stands alone and is impossible to miss.
+  html = html.replace(/<p>([\s\S]*?)<strong>Affiliate:<\/strong>\s*<a\s+href="([^"]*amazon\.[^"]*)"([^>]*)>([^<]*)<\/a><\/p>/g,
+    (whole, before, href, rest, text) => {
+      const r = rest
+        .replace(/\s*class="[^"]*"/g, '')
+        .replace(/\s*target="[^"]*"/g, '')
+        .replace(/\s*rel="[^"]*"/g, '');
+      const beforeClean = before.trim().replace(/\|\s*$/, '').trim();
+      return (beforeClean ? '<p>' + beforeClean + '</p>\n' : '') +
+        '<p class="cta-row"><a href="' + href + '" class="affiliate" target="_blank" rel="sponsored noopener"' + r + '>' + text + '</a></p>';
+    });
+  // Mark any remaining amazon links (not already processed) as sponsored.
   html = html.replace(/<a\s+href="([^"]*amazon\.[^"]*)"([^>]*)>/g, (whole, href, rest) => {
     if (/class="product-photo-link"/.test(rest)) return whole;
+    if (/class="affiliate"/.test(rest)) return whole;
     const r = rest
       .replace(/\s*class="[^"]*"/g, '')
       .replace(/\s*target="[^"]*"/g, '')
