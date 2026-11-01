@@ -170,7 +170,7 @@ function renderMarkdown(md) {
     if (!src) return '';
     const amazonUrl = 'https://www.amazon.com/s?k=' + encodeURIComponent(alt) + '&tag=smarthomerent-20';
     return (
-      '<div class="product-img"><a href="' + amazonUrl + '" class="affiliate" target="_blank" rel="sponsored noopener">' +
+      '<div class="product-img"><a href="' + amazonUrl + '" class="product-photo-link" target="_blank" rel="sponsored noopener">' +
       '<img src="' + src + '" alt="' + esc(alt) +
       '" loading="lazy" referrerpolicy="no-referrer"></a></div>'
     );
@@ -191,7 +191,9 @@ function renderMarkdown(md) {
   });
 
   // Affiliate links: mark them sponsored, open in a new tab.
+  // (Skip links we already styled, e.g. the product photo link.)
   html = html.replace(/<a\s+href="([^"]*amazon\.[^"]*)"([^>]*)>/g, (whole, href, rest) => {
+    if (/class="product-photo-link"/.test(rest)) return whole;
     const r = rest
       .replace(/\s*class="[^"]*"/g, '')
       .replace(/\s*target="[^"]*"/g, '')
